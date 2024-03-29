@@ -1,0 +1,11 @@
+transformers>=4.20
+nltk>=3.0,<=4.0
+scikit-learn>=1.0
+torch>=1.10 --index-url https://download.pytorch.org/whl/cu118
+gradio==4.19.1
+safetensors>=0.3.1
+psutil
+torchvision --index-url https://download.pytorch.org/whl/cu118
+torchaudio --index-url https://download.pytorch.org/whl/cu118
+fastapi
+uvicorn[standard]
