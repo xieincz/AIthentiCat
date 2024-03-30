@@ -53,7 +53,6 @@ if enable_en:
         MODEL_EN = GPT2LMHeadModel.from_pretrained(NAME_EN)
         TOKENIZER_EN = GPT2Tokenizer.from_pretrained(NAME_EN)
         MODEL_EN=MODEL_EN.to(device)
-        TOKENIZER_EN=TOKENIZER_EN.to(device)
         #print(f"英文模型已加载到{device}设备上")
         print(f"English model loaded to {device} device")
     except Exception as e:
@@ -68,7 +67,6 @@ try:
     MODEL_ZH = GPT2LMHeadModel.from_pretrained(NAME_ZH)
     TOKENIZER_ZH = GPT2Tokenizer.from_pretrained(NAME_ZH)
     MODEL_ZH=MODEL_ZH.to(device)
-    TOKENIZER_ZH=TOKENIZER_ZH.to(device)
     #print(f"中文模型已加载到{device}设备上")
     print(f"Chinese model loaded to {device} device")
 except Exception as e:

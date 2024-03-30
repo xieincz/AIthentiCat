@@ -34,7 +34,6 @@ if enable_en:
     try:
         model_en = RobertaForSequenceClassification.from_pretrained(name_en)
         model_en=model_en.to(device)
-        tokenizer_en=tokenizer_en.to(device)
         #print(f"英文模型已加载到{device}设备上")
         print(f"English model loaded to {device} device")
     except Exception as e:
@@ -51,7 +50,6 @@ tokenizer_zh = BertTokenizer.from_pretrained(name_zh)
 try:
     model_zh = BertForSequenceClassification.from_pretrained(name_zh)
     model_zh=model_zh.to(device)
-    tokenizer_zh=tokenizer_zh.to(device)
     #print(f"中文模型已加载到{device}设备上")
     print(f"Chinese model loaded to {device} device")
 except Exception as e:
@@ -64,8 +62,8 @@ except Exception as e:
 def predict_func(text: str, tokenizer, model):
     with torch.no_grad():
         inputs = tokenizer(
-            text, return_tensors="pt", max_length=512, truncation=True, device=device
-        )
+            text, return_tensors="pt", max_length=512, truncation=True
+        ).to(device)
         outputs = model(**inputs)
         scores = outputs.logits[0].softmax(0).numpy()
         result = {"label": scores.argmax().item(), "score": scores.max().item()}
