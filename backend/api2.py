@@ -64,8 +64,8 @@ def predict_func(text: str, tokenizer, model):
         inputs = tokenizer(
             text, return_tensors="pt", max_length=512, truncation=True
         ).to(device)
-        outputs = model(**inputs).to("cpu")
-        scores = outputs.logits[0].softmax(0).numpy()
+        outputs = model(**inputs)
+        scores = outputs.logits[0].softmax(0).cpu().numpy()
         result = {"label": scores.argmax().item(), "score": scores.max().item()}
     return result
 
