@@ -16,7 +16,8 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
-enable_en = False #是否启用英文模型
+enable_en = False  # 是否启用英文模型
+
 
 class Sentence(BaseModel):
     data: str
@@ -34,34 +35,39 @@ LR_GLTR_EN, LR_PPL_EN, LR_GLTR_ZH, LR_PPL_ZH = [
     for lang, name in [("en", "gltr"), ("en", "ppl"), ("zh", "gltr"), ("zh", "ppl")]
 ]
 
+# 检查是否有可用的GPU设备
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
 NAME_EN = "gpt2"
-TOKENIZER_EN=None
-if enable_en:
-    TOKENIZER_EN = GPT2Tokenizer.from_pretrained(NAME_EN)
+TOKENIZER_EN = None
 MODEL_EN = None
 
 NAME_ZH = "IDEA-CCNL/Wenzhong-GPT2-110M"
-TOKENIZER_ZH = GPT2Tokenizer.from_pretrained(NAME_ZH)
+TOKENIZER_ZH = None
 MODEL_ZH = None
 
-# 检查是否有可用的GPU设备
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 if enable_en:
     # 尝试加载英文模型到GPU
     try:
-        MODEL_EN = GPT2LMHeadModel.from_pretrained(NAME_EN).to(device)
+        MODEL_EN = GPT2LMHeadModel.from_pretrained(NAME_EN, device=device)
+        TOKENIZER_EN = GPT2Tokenizer.from_pretrained(NAME_EN, device=device)
         print(f"英文模型已加载到{device}设备上")
     except:
         MODEL_EN = GPT2LMHeadModel.from_pretrained(NAME_EN)
+        TOKENIZER_EN = GPT2Tokenizer.from_pretrained(NAME_EN)
+        device="cpu"
         print("英文模型加载到GPU失败，已使用CPU")
 
 # 尝试加载中文模型到GPU
 try:
-    MODEL_ZH = GPT2LMHeadModel.from_pretrained(NAME_ZH).to(device)
+    MODEL_ZH = GPT2LMHeadModel.from_pretrained(NAME_ZH, device=device)
+    TOKENIZER_ZH = GPT2Tokenizer.from_pretrained(NAME_ZH, device=device)
     print(f"中文模型已加载到{device}设备上")
 except:
     MODEL_ZH = GPT2LMHeadModel.from_pretrained(NAME_ZH)
+    TOKENIZER_ZH = GPT2Tokenizer.from_pretrained(NAME_ZH)
+    device="cpu"
     print("中文模型加载到GPU失败，已使用CPU")
 
 
@@ -103,7 +109,7 @@ def gpt2_features(
         if difference >= 0:
             break
 
-    input_ids = torch.tensor([tokenizer.bos_token_id] + token_ids).to(device)
+    input_ids = torch.tensor([tokenizer.bos_token_id] + token_ids, device=device)
     logits = model(input_ids).logits
     # Shift so that n-1 predict n
     shift_logits = logits[:-1].contiguous()
@@ -132,11 +138,11 @@ def gpt2_features(
     max_sent_ppl = max(sent_ppl)
     sent_ppl_avg = sum(sent_ppl) / len(sent_ppl)
     if len(sent_ppl) > 1:
-        sent_ppl_std = torch.std(torch.tensor(sent_ppl)).item()
+        sent_ppl_std = torch.std(torch.tensor(sent_ppl, device=device)).item()
     else:
         sent_ppl_std = 0
 
-    mask = torch.tensor([1] * loss.size(0))
+    mask = torch.tensor([1] * loss.size(0), device=device)
     step_ppl = loss.cumsum(dim=-1).div(mask.cumsum(dim=-1)).exp()
     max_step_ppl = step_ppl.max(dim=-1)[0].item()
     step_ppl_avg = step_ppl.sum(dim=-1).div(loss.size(0)).item()
@@ -210,6 +216,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
 @app.post("/v1/predict_zh/")
 def create_item(sentence: Sentence):
     GLTR_prob, PPL_prob = predict_zh(sentence.data)
@@ -218,7 +225,9 @@ def create_item(sentence: Sentence):
         "PPL_prob": PPL_prob,
     }  # >0.5 means the content is create by ChatGPT
 
+
 if enable_en:
+
     @app.post("/v1/predict_en/")
     def create_item(sentence: Sentence):
         GLTR_prob, PPL_prob = predict_en(sentence.data)
