@@ -52,23 +52,27 @@ if enable_en:
     try:
         MODEL_EN = GPT2LMHeadModel.from_pretrained(NAME_EN, device=device)
         TOKENIZER_EN = GPT2Tokenizer.from_pretrained(NAME_EN, device=device)
-        print(f"英文模型已加载到{device}设备上")
+        #print(f"英文模型已加载到{device}设备上")
+        print(f"English model loaded to {device} device")
     except:
         MODEL_EN = GPT2LMHeadModel.from_pretrained(NAME_EN)
         TOKENIZER_EN = GPT2Tokenizer.from_pretrained(NAME_EN)
         device="cpu"
-        print("英文模型加载到GPU失败，已使用CPU")
+        #print("英文模型加载到GPU失败，已使用CPU")
+        print("English model failed to load to GPU, using CPU")
 
 # 尝试加载中文模型到GPU
 try:
     MODEL_ZH = GPT2LMHeadModel.from_pretrained(NAME_ZH, device=device)
     TOKENIZER_ZH = GPT2Tokenizer.from_pretrained(NAME_ZH, device=device)
-    print(f"中文模型已加载到{device}设备上")
+    #print(f"中文模型已加载到{device}设备上")
+    print(f"Chinese model loaded to {device} device")
 except:
     MODEL_ZH = GPT2LMHeadModel.from_pretrained(NAME_ZH)
     TOKENIZER_ZH = GPT2Tokenizer.from_pretrained(NAME_ZH)
     device="cpu"
-    print("中文模型加载到GPU失败，已使用CPU")
+    #print("中文模型加载到GPU失败，已使用CPU")
+    print("Chinese model failed to load to GPU, using CPU")
 
 
 # code borrowed from https://github.com/blmoistawinde/HarvestText

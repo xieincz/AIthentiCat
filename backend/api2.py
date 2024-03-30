@@ -32,11 +32,13 @@ if enable_en:
     # 尝试加载英文模型到GPU
     try:
         model_en = RobertaForSequenceClassification.from_pretrained(name_en, device=device)
-        print(f"英文模型已加载到{device}设备上")
+        #print(f"英文模型已加载到{device}设备上")
+        print(f"English model loaded to {device} device")
     except:
         model_en = RobertaForSequenceClassification.from_pretrained(name_en)
         device="cpu"
-        print("英文模型加载到GPU失败，已使用CPU")
+        #print("英文模型加载到GPU失败，已使用CPU")
+        print("English model failed to load to GPU, using CPU instead")
     tokenizer_en = RobertaTokenizer.from_pretrained(name_en)
 
 
@@ -45,11 +47,13 @@ model_zh = None
 # 尝试加载中文模型到GPU
 try:
     model_zh = BertForSequenceClassification.from_pretrained(name_zh, device=device)
-    print(f"中文模型已加载到{device}设备上")
+    #print(f"中文模型已加载到{device}设备上")
+    print(f"Chinese model loaded to {device} device")
 except:
     model_zh = BertForSequenceClassification.from_pretrained(name_zh)
     device="cpu"
-    print("中文模型加载到GPU失败，已使用CPU")
+    #print("中文模型加载到GPU失败，已使用CPU")
+    print("Chinese model failed to load to GPU, using CPU instead")
 tokenizer_zh = BertTokenizer.from_pretrained(name_zh)
 
 
