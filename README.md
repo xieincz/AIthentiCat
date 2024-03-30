@@ -1,4 +1,4 @@
-# AIthentiCat
+# ![AIthentiCat](./README.assets/AIthentiCat.png)AIthentiCat
 a playful combination of "AI", "Authentic" and "Cat" as in catching fakes
 
 
@@ -8,6 +8,8 @@ a playful combination of "AI", "Authentic" and "Cat" as in catching fakes
 ### 配置环境
 
 需要python版本3.10
+
+> 注：建议先安装好CUDA并且在GPU显存大于4GB的机器上运行后端来获得更快的运行速度。
 
 ```cmd
 cd backend
@@ -94,3 +96,30 @@ fetch('http://127.0.0.1:6002/v2/predict_zh/', {
 解释：
 
 PTM模型认为有3%的可能性是ChatGPT生成的，也就是说它认为这句话是人类创作的。
+
+
+
+## 前端
+
+### 准备环境
+
+```cmd
+cd frontend
+npm install
+```
+
+> 注：如果 npm install 报错“400 Bad Request”，可以尝试[这个教程](https://blog.csdn.net/m0_54890506/article/details/135257913)
+
+### 运行
+
+```cmd
+cd frontend
+npm start
+```
+
+然后打开 http://localhost:6003/
+
+你将能看到这样的界面：
+
+![image-20240330213132758](./README.assets/image-20240330213132758.png)
+
