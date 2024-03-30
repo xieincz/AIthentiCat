@@ -12,6 +12,7 @@ from transformers.models.roberta import (
     RobertaTokenizer,
 )
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
 enable_en = False  # 是否启用英文模型
@@ -77,6 +78,13 @@ def predict_zh(text: str) -> List:
 
 app = FastAPI()
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 @app.post("/v2/predict_zh/")
 def create_item(sentence: Sentence):
