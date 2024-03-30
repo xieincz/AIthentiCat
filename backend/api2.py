@@ -31,7 +31,8 @@ tokenizer_en = None
 if enable_en:
     # 尝试加载英文模型到GPU
     try:
-        model_en = RobertaForSequenceClassification.from_pretrained(name_en, device=device)
+        model_en = RobertaForSequenceClassification.from_pretrained(name_en)
+        model_en=model_en.to(device)
         #print(f"英文模型已加载到{device}设备上")
         print(f"English model loaded to {device} device")
     except:
@@ -44,9 +45,12 @@ if enable_en:
 
 name_zh = "Hello-SimpleAI/chatgpt-detector-roberta-chinese"
 model_zh = None
+tokenizer_zh = BertTokenizer.from_pretrained(name_zh)
 # 尝试加载中文模型到GPU
 try:
-    model_zh = BertForSequenceClassification.from_pretrained(name_zh, device=device)
+    model_zh = BertForSequenceClassification.from_pretrained(name_zh)
+    model_zh=model_zh.to(device)
+    tokenizer_zh=tokenizer_zh.to(device)
     #print(f"中文模型已加载到{device}设备上")
     print(f"Chinese model loaded to {device} device")
 except:
@@ -54,7 +58,6 @@ except:
     device="cpu"
     #print("中文模型加载到GPU失败，已使用CPU")
     print("Chinese model failed to load to GPU, using CPU instead")
-tokenizer_zh = BertTokenizer.from_pretrained(name_zh)
 
 
 def predict_func(text: str, tokenizer, model):
