@@ -50,8 +50,8 @@ const Welcome: React.FC = () => {
   const predict = async (text:string) => {
     var data1:number=0,data2:number=0,data3:number=0;
 
-    //await fetch('https://ccd_v1.xiebin.me/v1/predict_zh/', {
-      await fetch('http://127.0.0.1:6001/v1/predict_zh/', {
+    await fetch('https://ccd_v1.xiebin.me/v1/predict_zh/', {
+      //await fetch('http://127.0.0.1:6001/v1/predict_zh/', {
       method: 'POST',
       headers: {
         'accept': 'application/json',
@@ -66,8 +66,8 @@ const Welcome: React.FC = () => {
     .then(data => {data1=data.GLTR_prob;data2=data.PPL_prob})
     .catch(error => console.error(error));
 
-    //await fetch('https://ccd_v2.xiebin.me/v2/predict_zh/', {
-      await fetch('http://127.0.0.1:6002/v2/predict_zh/', {
+    await fetch('https://ccd_v2.xiebin.me/v2/predict_zh/', {
+      //await fetch('http://127.0.0.1:6002/v2/predict_zh/', {
       method: 'POST',
       headers: {
         'accept': 'application/json',
