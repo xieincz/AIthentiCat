@@ -53,7 +53,9 @@ tokenizer_zh = BertTokenizer.from_pretrained(name_zh)
 
 def predict_func(text: str, tokenizer, model):
     with torch.no_grad():
-        inputs = tokenizer(text, return_tensors="pt", max_length=512, truncation=True)
+        inputs = tokenizer(
+            text, return_tensors="pt", max_length=512, truncation=True, device=device
+        )
         outputs = model(**inputs)
         scores = outputs.logits[0].softmax(0).numpy()
         result = {"label": scores.argmax().item(), "score": scores.max().item()}
@@ -86,6 +88,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
 @app.post("/v2/predict_zh/")
 def create_item(sentence: Sentence):
     PTM_prob = predict_zh(sentence.data)
@@ -93,7 +96,9 @@ def create_item(sentence: Sentence):
         "PTM_prob": PTM_prob,
     }  # >0.5 means the content is create by ChatGPT
 
+
 if enable_en:
+
     @app.post("/v2/predict_en/")
     def create_item(sentence: Sentence):
         PTM_prob = predict_en(sentence.data)

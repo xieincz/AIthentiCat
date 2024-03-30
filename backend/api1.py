@@ -103,7 +103,7 @@ def gpt2_features(
         if difference >= 0:
             break
 
-    input_ids = torch.tensor([tokenizer.bos_token_id] + token_ids)
+    input_ids = torch.tensor([tokenizer.bos_token_id] + token_ids).to(device)
     logits = model(input_ids).logits
     # Shift so that n-1 predict n
     shift_logits = logits[:-1].contiguous()
