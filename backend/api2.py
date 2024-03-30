@@ -29,18 +29,19 @@ name_en = "Hello-SimpleAI/chatgpt-detector-roberta"
 model_en = None
 tokenizer_en = None
 if enable_en:
+    tokenizer_en = RobertaTokenizer.from_pretrained(name_en)
     # 尝试加载英文模型到GPU
     try:
         model_en = RobertaForSequenceClassification.from_pretrained(name_en)
         model_en=model_en.to(device)
+        tokenizer_en=tokenizer_en.to(device)
         #print(f"英文模型已加载到{device}设备上")
         print(f"English model loaded to {device} device")
-    except:
+    except Exception as e:
         model_en = RobertaForSequenceClassification.from_pretrained(name_en)
         device="cpu"
         #print("英文模型加载到GPU失败，已使用CPU")
-        print("English model failed to load to GPU, using CPU instead")
-    tokenizer_en = RobertaTokenizer.from_pretrained(name_en)
+        print(f"{e}\nEnglish model failed to load to {device}, using CPU instead")
 
 
 name_zh = "Hello-SimpleAI/chatgpt-detector-roberta-chinese"
@@ -53,11 +54,11 @@ try:
     tokenizer_zh=tokenizer_zh.to(device)
     #print(f"中文模型已加载到{device}设备上")
     print(f"Chinese model loaded to {device} device")
-except:
+except Exception as e:
     model_zh = BertForSequenceClassification.from_pretrained(name_zh)
     device="cpu"
     #print("中文模型加载到GPU失败，已使用CPU")
-    print("Chinese model failed to load to GPU, using CPU instead")
+    print(f"{e}\nChinese model failed to load to {device}, using CPU instead")
 
 
 def predict_func(text: str, tokenizer, model):
