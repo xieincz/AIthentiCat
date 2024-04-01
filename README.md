@@ -1,7 +1,7 @@
 # ![AIthentiCat](./README.assets/AIthentiCat.png)AIthentiCat
 a playful combination of "AI", "Authentic" and "Cat" as in catching fakes
 
-在线 Demo: [https://aithenticat.xiebin.me](https://aithenticat.xiebin.me/)
+
 
 ## 后端
 
